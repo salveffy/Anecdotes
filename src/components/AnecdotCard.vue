@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <ol class="bullet">
-      <li v-for="anecdot in anecdotes.jokes" :key="anecdot">
+      <li v-for="anecdot in searchResultData" :key="anecdot">
           {{anecdot.joke || anecdot.delivery + ' ' + anecdot.setup}}
       </li>
     </ol>
@@ -13,11 +13,10 @@ import axios from "axios";
 
 export default {
   name: "AnecdotCard",
-  data: () => {
-    return {
-      anecdotes: [],
-    };
-  },
+  props: ['searchData'],
+  data: () => ({
+      anecdotes:[],
+  }),
   mounted() {
     this.getAnecdotes();
   },
@@ -27,11 +26,18 @@ export default {
         const response = await axios.get(
           "https://v2.jokeapi.dev/joke/Any?amount=10"
         );
-        this.anecdotes = response.data;
-        console.log(response.data);
+        this.anecdotes = response.data.jokes;
+        console.log(response.data.jokes);
       } catch (e) {
         console.error(e);
       }
+    },
+  },
+    computed: {
+    searchResultData() {
+      return this.anecdotes.filter(item => {
+        return Object.values(item).some(m => m.toString().includes(this.searchData));
+      });
     },
   },
 };

@@ -49,6 +49,13 @@ body {
   display: flex;
   justify-content: center;
 }
+
+.search_container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 .search_title {
   font-size: 22px;
   font-weight: 900;

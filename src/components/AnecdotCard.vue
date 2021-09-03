@@ -7,7 +7,13 @@
         :class="{ white: statusLike[anecdot.id] }"
       >
         {{ anecdot.joke || anecdot.delivery + " " + anecdot.setup }}
-        <button class="btnLike" @click="activLike(anecdot.id)">Like</button>
+        <button
+          class="btnLike"
+          v-on:click="onLike = !onLike"
+          @click="activLike(anecdot.id), setLocStor(anecdot)"
+        >
+          Like
+        </button>
       </li>
     </ol>
   </div>
@@ -22,6 +28,7 @@ export default {
   data: () => ({
     anecdotes: [],
     statusLike: {},
+    onLike: false,
   }),
   mounted() {
     this.getAnecdotes();
@@ -33,13 +40,16 @@ export default {
           "https://v2.jokeapi.dev/joke/Any?amount=10"
         );
         this.anecdotes = response.data.jokes;
-        console.log(response.data.jokes);
       } catch (e) {
         console.error(e);
       }
     },
     activLike(id) {
       this.$set(this.statusLike, id, !this.statusLike[id]);
+    },
+    setLocStor(anecdot) {
+      localStorage.setItem(anecdot.id, JSON.stringify(anecdot));
+      this.onLike = false;
     },
   },
   computed: {
@@ -61,9 +71,9 @@ export default {
   display: flex;
   justify-content: center;
 }
-ul {
+ol {
   padding: 0;
-  max-width: 300px;
+  width: 50%;
 }
 
 li {
@@ -74,7 +84,7 @@ li {
   box-sizing: border-box;
   color: white;
   text-align: center;
-
+  justify-content: space-between;
 }
 
 li::before {
@@ -92,7 +102,7 @@ li + li {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 .btnLike {
-  background-color:white; /* Green */
+  background-color: white; /* Green */
   border: none;
   color: black;
   padding: 4px 16px;
@@ -107,5 +117,29 @@ li + li {
 .white {
   background-color: white;
   color: black;
+}
+
+@media (max-width: 1000px) {
+  ol {
+    padding: 0;
+    width: 100%;
+  }
+  @media (max-width: 480px) {
+    ol {
+      padding: 0;
+      width: 60%;
+    }
+    li {
+      flex-direction: column;
+      margin: 10px;
+    }
+    li::before {
+      padding-right: 20px;
+      padding-bottom: 10px;
+    }
+    .btnLike {
+      margin-top: 15px;
+    }
+  }
 }
 </style>

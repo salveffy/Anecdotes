@@ -6,7 +6,7 @@
         <input
           v-model="searchData"
           class="search_input"
-          type="search"
+          type="text"
           placeholder="Search"
         />
       </div>
